@@ -164,3 +164,4 @@ cython_debug/
 
 #Archivo csv con bag of words
 Back_of_words_version2.1.csv
+environment

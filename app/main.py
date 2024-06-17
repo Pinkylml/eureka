@@ -33,8 +33,9 @@ corpur=Corpus(df)
 async def read_item(query: str):
         corpur.jaccard(query=query)
         corpur.cosine(query=query)
-        recall=evaluate(query,all_files,corpur.best_titles_jaccard)
+        recall,precision=evaluate(query,all_files,corpur.best_titles_jaccard)
         print("Recall jacc: ", recall)
+        print("presicion jacc: ", precision)
         result=retrieval_relevant_docs(
             df,
             corpur.sorted_indices_jacc,

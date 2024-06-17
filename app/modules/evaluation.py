@@ -2,6 +2,8 @@ filename = "data/reuters/cats.txt"
 verdaderos=[]
 true_positives=0
 false_negatives=0
+false_positives=0
+
 def evaluate(query,all_titles,predicted):
     global true_positives, false_negatives
     with open(filename, 'r') as file:
@@ -15,7 +17,8 @@ def evaluate(query,all_titles,predicted):
     obteing_true_positives(predicted)
     obteing_false_negative(predicted)
     recall=true_positives/(true_positives+false_negatives)
-    return recall
+    precision=true_positives/(true_positives+false_positives)
+    return recall, precision
 
         
 def obteing_true_positives(predicted):
@@ -23,6 +26,7 @@ def obteing_true_positives(predicted):
     for value in predicted:
         if value in verdaderos:
             true_positives+=1
+    print(true_positives)
             
 def obteing_false_negative(predicted):
     global false_negatives
@@ -31,6 +35,15 @@ def obteing_false_negative(predicted):
     false_negatives_list=list(set_verdaderos-set_predicted)
     false_negatives=len(false_negatives_list)
     
+    
+    
+def get_false_positive(predicted):
+    global false_positives
+    set_predicted=set(predicted)
+    set_verdaderos=set(verdaderos)
+    false_positives_list=list(set_predicted-set_verdaderos)
+    false_positives=len(false_positives_list)
+    print("False positives", false_positives)
     
             
 

@@ -14,7 +14,9 @@ class Corpus:
         self.best_titles_jaccard=None
         self.best_titles_cosine=None
         self.sorted_indices_jacc=None
+        self.sorted_indices_cos=None
         self.jaccard_similarities=None
+        self.cosine_distances=None
         
         
     def calcular_similitud_jaccard(self, query, count_vectorizer):
@@ -67,24 +69,33 @@ class Corpus:
             else:
                 break
         end=time.time()
-        print("Time: ",end-start)
+        print("Finalizo jaccard, Time: ",end-start)
+        
             
     def cosine(self,query):
-        query_bow = self.tfidf_vectorizer.transform([query])
+        print("procesando cosine.....")
+        start=time.time()
+        query_tdid_vector = self.tfidf_vectorizer.transform([query])
+        print(query_tdid_vector)
         cosine_distances = []
         for idx in range(self.tfidf_matrix.shape[0]):
-            similarity = cosine_distances(
-                self.bag_of_words_matrix[idx].toarray()[0],
-                query_bow.toarray()[0]
-            )
-            cosine_distances.append(similarity)
+            a=self.tfidf_matrix[idx].toarray().squeeze()
+            b=query_tdid_vector.toarray().squeeze()
+            cos_distantce=np.dot(a,b)/(np.linalg.norm(a)*np.linalg.norm(b))
+            cosine_distances.append(cos_distantce)
         
-        # Obtener índices ordenados por similitud descendente
-        sorted_indices = np.argsort(cosine_distances)[::-1]
-        self.best_titles_jaccard=[]
-        for idx in sorted_indices:
-            filename=self.df['filename'].iloc[idx]
-            self.best_titles_cosine.append(filename)
+        sorted_indices2 = np.argsort(cosine_distances)[::-1]
+        self.best_titles_cosine=[]
+        self.sorted_indices_cos=sorted_indices2
+        self.cosine_distances=cosine_distances
+        for idx in sorted_indices2:
+            if(cosine_distances[idx]>0.0):
+                filename=self.df['filename'].iloc[idx]
+                self.best_titles_cosine.append(filename)
+            else:
+                break
+        end=time.time()
+        print("finalizo cosine Time: ",end-start)
         
         
     

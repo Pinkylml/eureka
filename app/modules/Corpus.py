@@ -81,7 +81,10 @@ class Corpus:
         for idx in range(self.tfidf_matrix.shape[0]):
             a=self.tfidf_matrix[idx].toarray().squeeze()
             b=query_tdid_vector.toarray().squeeze()
-            cos_distantce=np.dot(a,b)/(np.linalg.norm(a)*np.linalg.norm(b))
+            if np.linalg.norm(a)*np.linalg.norm(b)>0.0:                
+                cos_distantce=np.dot(a,b)/(np.linalg.norm(a)*np.linalg.norm(b))
+            else:
+                cos_distantce=0.0
             cosine_distances.append(cos_distantce)
         
         sorted_indices2 = np.argsort(cosine_distances)[::-1]

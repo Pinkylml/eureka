@@ -35,10 +35,11 @@ class Corpus:
         jaccard_similarities = []
         self.jaccard_similarities = []
         for idx in range(self.bag_of_words_matrix.shape[0]):
-            similarity = jaccard_score(
-                self.bag_of_words_matrix[idx].toarray()[0],
-                query_bow.toarray()[0]
-            )
+            a=query_bow.toarray().squeeze()
+            b=self.bag_of_words_matrix[idx].toarray().squeeze()
+            intersection = np.sum(np.logical_and(a, b))
+            union= np.sum(np.logical_or(a, b))
+            similarity=intersection/union if union != 0 else 0.0
             jaccard_similarities.append(similarity)
 
         sorted_indices = np.argsort(jaccard_similarities)[::-1]
